@@ -1,0 +1,196 @@
+CREATE DATABASE EcommerceDB;
+USE DATABASE EcommerceSB;
+```
+CREATE TABLE brand (
+    brand_id INT AUTO_INCREMENT,
+    brand_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (brand_id)
+);
+
+CREATE TABLE product_category (
+    category_id INT AUTO_INCREMENT,
+    category_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (category_id)
+);
+
+CREATE TABLE attribute_category (
+    attribute_category_id INT AUTO_INCREMENT,
+    category_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (attribute_category_id)
+);
+
+CREATE TABLE attribute_type (
+    attribute_type_id INT AUTO_INCREMENT,
+    attribute_category_id INT,
+    type_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (attribute_type_id),
+    FOREIGN KEY (attribute_category_id) REFERENCES attribute_category(attribute_category_id)
+);
+
+CREATE TABLE color (
+    color_id INT AUTO_INCREMENT,
+    color_name VARCHAR(50) NOT NULL,
+    color_code VARCHAR(10),
+    PRIMARY KEY (color_id)
+);
+
+CREATE TABLE size_category (
+    size_category_id INT AUTO_INCREMENT,
+    category_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (size_category_id)
+);
+
+CREATE TABLE size_option (
+    size_option_id INT AUTO_INCREMENT,
+    size_category_id INT,
+    size_value VARCHAR(20) NOT NULL,
+    PRIMARY KEY (size_option_id),
+    FOREIGN KEY (size_category_id) REFERENCES size_category(size_category_id)
+);
+
+CREATE TABLE product (
+    product_id INT AUTO_INCREMENT,
+    product_name VARCHAR(255) NOT NULL,
+    brand_id INT,
+    base_price DECIMAL(10, 2) NOT NULL,
+    category_id INT,
+    PRIMARY KEY (product_id),
+    FOREIGN KEY (brand_id) REFERENCES brand(brand_id),
+    FOREIGN KEY (category_id) REFERENCES product_category(category_id)
+);
+
+CREATE TABLE product_attribute (
+    attribute_id INT AUTO_INCREMENT,
+    product_id INT,
+    attribute_type_id INT,
+    attribute_value VARCHAR(255) NOT NULL,
+    PRIMARY KEY (attribute_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (attribute_type_id) REFERENCES attribute_type(attribute_type_id)
+);
+
+CREATE TABLE product_variation (
+    variation_id INT AUTO_INCREMENT,
+    product_id INT,
+    color_id INT,
+    size_option_id INT,
+    PRIMARY KEY (variation_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (color_id) REFERENCES color(color_id),
+    FOREIGN KEY (size_option_id) REFERENCES size_option(size_option_id)
+);
+
+CREATE TABLE product_item (
+    item_id INT AUTO_INCREMENT,
+    product_id INT,
+    variation_id INT,
+    PRIMARY KEY (item_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (variation_id) REFERENCES product_variation(variation_id)
+);
+
+CREATE TABLE product_image (
+    image_id INT AUTO_INCREMENT,
+    product_id INT,
+    image_url VARCHAR(255) NOT NULL,
+    PRIMARY KEY (image_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+Brand Table
+```
+INSERT INTO brand (brand_name) VALUES
+('Nike'),
+('Adidas'),
+('Reebok');
+```
+
+Product Category Table
+```
+INSERT INTO product_category (category_name) VALUES
+('Shoes'),
+('Clothing'),
+('Accessories');
+```
+
+Attribute Category Table
+```
+INSERT INTO attribute_category (category_name) VALUES
+('Physical'),
+('Technical'),
+('Aesthetic');
+```
+
+Attribute Type Table
+```
+INSERT INTO attribute_type (attribute_category_id, type_name) VALUES
+(1, 'Weight'),
+(1, 'Size'),
+(2, 'Material'),
+(3, 'Color');
+```
+
+Color Table
+```
+INSERT INTO color (color_name, color_code) VALUES
+('Red', '#FF0000'),
+('Blue', '#0000FF'),
+('Green', '#00FF00');
+```
+
+Size Category Table
+```
+INSERT INTO size_category (category_name) VALUES
+('Shoe Size'),
+('Clothing Size');
+```
+
+Size Option Table
+```
+INSERT INTO size_option (size_category_id, size_value) VALUES
+(1, '8'),
+(1, '9'),
+(1, '10'),
+(2, 'S'),
+(2, 'M'),
+(2, 'L');
+```
+
+Product Table
+```
+INSERT INTO product (product_name, brand_id, base_price, category_id) VALUES
+('Nike Air Max', 1, 120.00, 1),
+('Adidas Superstar', 2, 80.00, 1),
+('Reebok Classic', 3, 60.00, 1);
+```
+
+Product Attribute Table
+```
+INSERT INTO product_attribute (product_id, attribute_type_id, attribute_value) VALUES
+(1, 1, '300g'),
+(1, 2, '10'),
+(2, 3, 'Leather');
+```
+
+Product Variation Table
+```
+INSERT INTO product_variation (product_id, color_id, size_option_id) VALUES
+(1, 1, 1),
+(1, 2, 2),
+(2, 3, 3);
+```
+
+Product Item Table
+```
+INSERT INTO product_item (product_id, variation_id) VALUES
+(1, 1),
+(1, 2),
+(2, 3);
+```
+
+Product Image Table
+```
+INSERT INTO product_image (product_id, image_url) VALUES
+(1, 'https://example.com/nike-air-max.jpg'),
+(2, 'https://example.com/adidas-superstar.jpg'),
+(3, 'https://example.com/reebok-classic.jpg');
